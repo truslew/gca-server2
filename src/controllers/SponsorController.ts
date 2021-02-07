@@ -6,19 +6,19 @@ import { Sponsor } from '../entity/Sponsor';
 
 class SponsorController {
     static listAll = async (req: Request, res: Response) => {
-        const userRepository = getRepository(Sponsor);
-        const users = await userRepository.find();
+        const sponsorRepository = getRepository(Sponsor);
+        const sponsor = await sponsorRepository.find();
 
-        res.json(users);
+        res.json(sponsor);
     };
 
     static getOneById = async (req: Request, res: Response) => {
         const { id } = req.params;
 
-        const userRepository = getRepository(Sponsor);
+        const sponsorRepository = getRepository(Sponsor);
         try {
-            const user = await userRepository.findOneOrFail(id);
-            res.json(user);
+            const sponsor = await sponsorRepository.findOneOrFail(id);
+            res.json(sponsor);
         } catch (error) {
             res.status(400).send('User not found');
         }
@@ -34,16 +34,17 @@ class SponsorController {
             return;
         }
 
-        const userRepository = getRepository(Sponsor);
+        const sponsorRepository = getRepository(Sponsor);
 
-        const existing = await userRepository.findOne(sponsor.id);
+        const existing = await sponsorRepository.findOne(sponsor.id);
         if (existing) {
             res.status(400).send('Exists');
             return;
         }
 
         try {
-            const result = await userRepository.save(sponsor);
+            await sponsorRepository.save(sponsor);
+            const result = await sponsorRepository.findOne(sponsor.id);
             res.json(result);
         } catch (error) {
             res.status(400).send(error);
@@ -61,11 +62,11 @@ class SponsorController {
             return;
         }
 
-        const userRepository = getRepository(Sponsor);
+        const sponsorRepository = getRepository(Sponsor);
 
         try {
-            await userRepository.save(sponsor);
-            const result = await userRepository.findOne(sponsor.id)
+            await sponsorRepository.save(sponsor);
+            const result = await sponsorRepository.findOne(sponsor.id);
             res.json(result);
         } catch (error) {
             res.status(400).send(error);
@@ -76,9 +77,8 @@ class SponsorController {
     static delete = async (req: Request, res: Response) => {
         const { id } = req.body;
         try {
-            const userRepository = getRepository(Sponsor);
-
-            await userRepository.delete(id);
+            const sponsorRepository = getRepository(Sponsor);
+            await sponsorRepository.delete(id);
         } catch (error) {
             res.status(400).send(error);
             return;
