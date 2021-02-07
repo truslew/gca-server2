@@ -1,5 +1,7 @@
 import { IsBoolean, IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, Length, MinLength } from 'class-validator';
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { Agreement } from './Agreement';
+import { Gift } from './Gift';
 
 @Entity({ name: 'Sponsors' })
 export class Sponsor {
@@ -67,6 +69,12 @@ export class Sponsor {
     @Length(9, 9)
     @IsOptional()
     organizationNumber: string;
+
+    @OneToMany(() => Agreement, agreement => agreement.sponsor)
+    agreements: Agreement[];
+
+    @OneToMany(() => Gift, agreement => agreement.sponsor)
+    gifts: Gift[];
 
     @CreateDateColumn()
     createdAt: Date;
